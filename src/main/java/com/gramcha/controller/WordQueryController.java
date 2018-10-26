@@ -1,6 +1,7 @@
 package com.gramcha.controller;
 
 import com.gramcha.services.SoundsLikeClientService;
+import com.gramcha.services.SynonymsClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,8 @@ public class WordQueryController {
     @Autowired
     SoundsLikeClientService soundsLikeClientService;
 
+    @Autowired
+    SynonymsClientService synonymsClientService;
     String hostname;
     @PostConstruct
     void init() throws UnknownHostException {
@@ -32,19 +35,18 @@ public class WordQueryController {
         System.out.println("hostname = "+hostname);
     }
 
-    @RequestMapping(path = "/synonyms")
-    public Mono<String> synonyms() throws UnknownHostException {
-        init();
-        Mono<String> result = Mono.just(hostname+" "+"Hello, world");
+    @RequestMapping(path = "/synonyms/{word}")
+    public Mono<String> synonyms(@PathVariable String word){
+        Mono<String> result = synonymsClientService.getSynonymsResult(word);
         return result;
     }
 
     @RequestMapping(path = "/soundslike/{word}")
     public Mono<String> soundslike(@PathVariable String word) throws UnknownHostException {
-//        init();
+
         Mono<String> result = soundsLikeClientService.getSoundsLikeResult(word);
         return result;
-
+//        init();
 //        Mono<String> result = Mono.just(hostname+" "+"Hello, world");
 //        return result;
     }
