@@ -1,7 +1,9 @@
 package com.gramcha.controller;
 
+import com.gramcha.services.AntonymsClientService;
 import com.gramcha.services.SoundsLikeClientService;
 import com.gramcha.services.SynonymsClientService;
+import com.netflix.discovery.converters.Auto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,8 @@ public class WordQueryController {
     SoundsLikeClientService soundsLikeClientService;
 
     @Autowired
+    AntonymsClientService antonymsClientService;
+    @Autowired
     SynonymsClientService synonymsClientService;
     String hostname;
     @PostConstruct
@@ -38,6 +42,12 @@ public class WordQueryController {
     @RequestMapping(path = "/synonyms/{word}")
     public Mono<String> synonyms(@PathVariable String word){
         Mono<String> result = synonymsClientService.getSynonymsResult(word);
+        return result;
+    }
+
+    @RequestMapping(path = "/antonyms/{word}")
+    public Mono<String> antonyms(@PathVariable String word){
+        Mono<String> result = antonymsClientService.getAntonymsResult(word);
         return result;
     }
 
