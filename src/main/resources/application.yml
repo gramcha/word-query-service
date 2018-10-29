@@ -12,15 +12,36 @@ eureka:
   instance:
     leaseRenewalIntervalInSeconds: 1
     leaseExpirationDurationInSeconds: 2
-
-hystrix:
-  command:
-    default:
-      execution:
-        isolation:
-          strategy: THREAD
-          thread:
-            timeoutInMilliseconds: 10000
 ribbon:
   eager-load:
     enabled: true
+#hystrix:
+#  metrics:
+#    enabled:
+#      command:
+#          default:
+#            execution:
+#              isolation:
+#                strategy: THREAD
+#                thread:
+#                  timeoutInMilliseconds: 10000
+management:
+  endpoint:
+    hystrix:
+      stream:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: ["hystrix.stream","info","health"]
+      base-path: /actuator
+#        web:
+#              exposure:
+#                include: hystrix.stream
+#              base-path: /
+hystrix:
+  metrics:
+    enabled: true
+
+
+
