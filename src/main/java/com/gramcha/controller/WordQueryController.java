@@ -4,6 +4,7 @@ import com.gramcha.services.AntonymsClientService;
 import com.gramcha.services.SoundsLikeClientService;
 import com.gramcha.services.SynonymsClientService;
 import com.netflix.discovery.converters.Auto;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -39,6 +40,7 @@ public class WordQueryController {
         System.out.println("hostname = "+hostname);
     }
 
+    @HystrixCommand(fallbackMethod = "fallback")
     @RequestMapping(path = "/synonyms/{word}")
     public Mono<String> synonyms(@PathVariable String word){
         Mono<String> result = synonymsClientService.getSynonymsResult(word);
@@ -59,5 +61,11 @@ public class WordQueryController {
 //        init();
 //        Mono<String> result = Mono.just(hostname+" "+"Hello, world");
 //        return result;
+    }
+
+    public Mono<String> fallback(String word, Throwable hystrixCommand){
+        System.out.println(hystrixCommand.toString());
+        Mono<String> result = Mono.just(word);
+        return result;
     }
 }
