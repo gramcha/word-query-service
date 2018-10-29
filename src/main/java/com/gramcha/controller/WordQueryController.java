@@ -47,12 +47,14 @@ public class WordQueryController {
         return result;
     }
 
+    @HystrixCommand(fallbackMethod = "fallback")
     @RequestMapping(path = "/antonyms/{word}")
     public Mono<String> antonyms(@PathVariable String word){
         Mono<String> result = antonymsClientService.getAntonymsResult(word);
         return result;
     }
 
+    @HystrixCommand(fallbackMethod = "fallback")
     @RequestMapping(path = "/soundslike/{word}")
     public Mono<String> soundslike(@PathVariable String word) throws UnknownHostException {
 
